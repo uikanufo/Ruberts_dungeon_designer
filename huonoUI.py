@@ -29,23 +29,25 @@ class Window(Frame):
         editMenu.add_command(label="Redo")
         print(Canvas.configure(self).keys())
         menu.add_cascade(label="Edit", menu=editMenu)
-    
+        self.current_project = False
     
     def new_project(self):
-        return Project(root, window_height, window_width)
+        if self.current_project.__class__ == Project:
+            self.current_project.unload_canvas()
+        self.current_project = Project(root, window_height, window_width)
 
     def exitProgram(self):
         exit()
 
     
     def save_project(self):
-        with open(f"./Ruberts_projects/{self.currentProject.name}.rdproj", "wb") as file:
-            saved_project = pickle.dump(self.currentProject, file)
+        savable_project = self.current_project.save_project()
         
     def load_project(self):
         project = filedialog.askopenfilename()
         projectbytes = open(project, "rb")
-        return(pickle.load(projectbytes))
+        project = pickle.load(projectbytes)
+        project.load_project(root, window_height, window_width)
     
 
 
