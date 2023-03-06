@@ -6,7 +6,7 @@ from project import *
 
 
 window_width = 300
-window_height = 250
+window_height = 300
 
 class Window(Frame):
     def __init__(self, master=None):
@@ -48,6 +48,8 @@ class Window(Frame):
         projectbytes = open(project, "rb")
         project = pickle.load(projectbytes)
         project.load_project(root, window_height, window_width)
+
+
     
 
 
@@ -60,7 +62,15 @@ root = Tk()
 app = Window(root)
 
 
+def mouse_pos(event):
+    x, y = event.x, event.y
+    mouse_place = (x, y)
+    app.current_project.draw_square(mouse_place)    
 
+
+
+
+root.bind("<Button>", mouse_pos)
         
 
 root.wm_title("Tkinter window")

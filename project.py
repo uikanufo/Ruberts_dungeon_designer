@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk, simpledialog
+from math import floor 
 import pickle
 
 class Project:
@@ -8,12 +9,18 @@ class Project:
         return self.C.create_line(x0, y0, x1, y1, fill="black")
 
     def grid_function(self, size:int, window_width, window_height):
-        for i in range(1, 31):
-             self.draw_black_line(0, i*size, window_width, i*size)
-        for i in range(1, 31):
-            self.draw_black_line(i*size, 0, i*size, window_height)
-    
+        hori_line = 0
+        vert_line = 0
+        while vert_line != floor(window_width/size):
+            self.draw_black_line(0, vert_line*size, window_width, (vert_line*size)) #Horizontal lines
+            vert_line += 1
+        while hori_line != floor(window_height/size):
+            self.draw_black_line((hori_line*size), 0, (hori_line*size), window_height) #Vertical lines
+            hori_line += 1
+    #squares = [[False for peruna in range(leveys)] for peruna in range(korkeus)]
+
     def save_project(self):
+        """Useless for now"""
         this_project = pickle.dumps(self)
         return this_project
 
@@ -22,10 +29,18 @@ class Project:
                 height=window_height, width=window_width)
         
 
-        self.grid_function(15, window_width, window_height)
+        self.grid_function(20, window_width, window_height)
         
 
         self.C.pack()
+
+    def draw_square(self, mouse_coordinates):
+        self.C.create_rectangle(mouse_coordinates[0]-5,
+        mouse_coordinates[1]-5, 
+        mouse_coordinates[0]+5,
+        mouse_coordinates[1]+5)
+
+
 
     def __init__(self, root, window_height, window_width) -> None:
 
