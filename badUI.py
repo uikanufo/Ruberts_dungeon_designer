@@ -36,8 +36,8 @@ class Window(Frame):
         if self.current_project.__class__ == Project:
             self.current_project.unload_canvas()
         self.current_project = Project(root, window_height, window_width)
-        print(self.current_project.hori_line_coordinates)
-        print(self.current_project.vert_line_coordinates)
+        print("horizontal lines: ", self.current_project.hori_line_coordinates)
+        print("vertical lines: ", self.current_project.vert_line_coordinates)
 
     def exitProgram(self):
         exit()
@@ -98,15 +98,22 @@ def god_help_me(event):
 def draw_rectangle(event):
     x = event.x
     y = event.y
-    xstart = x-(x%5)
-    ystart = y-(y%5)
-    x0 = app.current_project.vert_line_coordinates[xstart/5][0][0]
-    y0 = app.current_project.hori_line_coordinates[ystart/5][0][1]
+    xstart = x-(x%20)
+    ystart = y-(y%20)
+    print(app.current_project.vert_line_coordinates[int(xstart/20)][0][0])
+    x0 = app.current_project.vert_line_coordinates[int(xstart/20)][0][0]
+    y0 = app.current_project.hori_line_coordinates[int(ystart/20)][0][1]
 
-    x1 = app.current_project.vert_line_coordinates[(xstart+5)/5][0][0]
-    y1 = app.current_project.hori_line_coordinates[(ystart+5)/5][0][1]
+    x1 = app.current_project.vert_line_coordinates[int((xstart+20)/20)][0][0]
+    y1 = app.current_project.hori_line_coordinates[int((ystart+20)/20)][0][1]
     correct_coords = (x0, y0, x1, y1,)
-    
+    print(correct_coords)
+    app.current_project.draw_square(correct_coords)
+
+   # def mouse_pos(event):
+   # x, y = event.x, event.y
+   # mouse_place = (x, y)
+   # app.current_project.draw_square(mouse_place)  
 
     """
     Idea:
@@ -121,7 +128,7 @@ def draw_rectangle(event):
 
 
 
-root.bind("<Button>", god_help_me)
+root.bind("<Button>", draw_rectangle)
         
 
 root.wm_title("Tkinter window")
