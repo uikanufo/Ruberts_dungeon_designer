@@ -65,65 +65,21 @@ root = Tk()
 app = Window(root)
 
 
-def god_help_me(event):
-    """I copied this code from Stackoverflow in a desperate attempt to see if it does what I want"""
-    canvas = app.current_project.C
-    draft = Canvas(app) # if w is deleted, the draft is deleted
-    draft.delete(ALL) # if you use the fake canvas for other uses
-
-    concerned = canvas.find_withtag("line") # what you want
-
-    for obj in concerned: # copy on draft
-
-        # first, get the method to use
-        if canvas.type(obj) == "line": create = draft.create_line
-        # use "elif ..." to copy more types of objects
-        else: continue
-
-        # copy the element with its attributes
-        config = {opt:canvas.itemcget(obj, opt) for opt in canvas.itemconfig(obj)}
-        config["tags"] = str(obj) # I can retrieve the ID in "w" later with this trick
-        create(*canvas.coords(obj), **config)
-
-    # use coordinates relative to the canvas
-    x = canvas.canvasx(event.x)
-    y = canvas.canvasy(event.y)
-
-    item = draft.find_closest(x,y) # ID in draft (as a tuple of len 1)
-    if item: item = int( draft.gettags(*item)[0] ) # ID in w
-    else: item = None # closest not found
-
-    print(x, y)
 
 def draw_rectangle(event):
     x = event.x
     y = event.y
     xstart = x-(x%20)
     ystart = y-(y%20)
-    print(app.current_project.vert_line_coordinates[int(xstart/20)][0][0])
-    x0 = app.current_project.vert_line_coordinates[int(xstart/20)][0][0]
-    y0 = app.current_project.hori_line_coordinates[int(ystart/20)][0][1]
+    x0 = app.current_project.vert_line_coordinates[int(xstart/20)][0][0]+1
+    y0 = app.current_project.hori_line_coordinates[int(ystart/20)][0][1]+1
 
-    x1 = app.current_project.vert_line_coordinates[int((xstart+20)/20)][0][0]
-    y1 = app.current_project.hori_line_coordinates[int((ystart+20)/20)][0][1]
+    x1 = app.current_project.vert_line_coordinates[int((xstart+20)/20)][0][0]+1
+    y1 = app.current_project.hori_line_coordinates[int((ystart+20)/20)][0][1]+1
     correct_coords = (x0, y0, x1, y1,)
     print(correct_coords)
     app.current_project.draw_square(correct_coords)
 
-   # def mouse_pos(event):
-   # x, y = event.x, event.y
-   # mouse_place = (x, y)
-   # app.current_project.draw_square(mouse_place)  
-
-    """
-    Idea:
-    Divide x coordinates by grid size
-    Round down to nearest (lower) number divisible
-    Should give the index in the list
-    Repeat for Y
-    Same for other corner, but round to higher
-    Check where lines intersect
-    """ 
 
 
 
