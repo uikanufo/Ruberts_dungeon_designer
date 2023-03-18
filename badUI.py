@@ -13,7 +13,7 @@ class Window(Frame):
     def __init__(self, master=None):
         Frame.__init__(self, master)
         self.master = master
-
+        #These are mainly the buttons for the menu up top. Pretty self-explanatory
         menu = Menu(self.master)
         self.master.config(menu=menu)
 
@@ -45,20 +45,16 @@ class Window(Frame):
     
     def save_project(self):
         savable_project = self.current_project.save_project()
+        save = filedialog.asksaveasfilename()
+        with open(save, "wb") as saveplace:
+            saveplace.write(savable_project)
         
     def load_project(self):
         project = filedialog.askopenfilename()
         projectbytes = open(project, "rb")
         project = pickle.load(projectbytes)
-        project.load_project(root, window_height, window_width)
+        project.load_project(root, window_height, window_width, project)
 
-
-    
-
-
-
-if os.path.isdir("Ruberts_projects") != True:
-    os.mkdir("Ruberts_projects")
 
 
 root = Tk()
@@ -81,10 +77,7 @@ def draw_rectangle(event):
     app.current_project.draw_square(correct_coords)
 
 
-
-
-
-root.bind("<Button>", draw_rectangle)
+root.bind("<Button-1 >", draw_rectangle)
         
 
 root.wm_title("Tkinter window")

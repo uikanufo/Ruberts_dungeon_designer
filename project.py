@@ -11,6 +11,7 @@ class Project:
         return self.C.create_line(x0, y0, x1, y1, fill="grey", tags = "line")
 
     def grid_function(self, size:int, window_width, window_height):
+        """Draws a grey grid. Keep in mind the offset of +1 for the startpoint of lines"""
 
         global vert_line_coordinates
         global hori_line_coordinates 
@@ -29,11 +30,10 @@ class Project:
             hori_line += 1
 
     def save_project(self):
-        """Useless for now"""
-        this_project = pickle.dumps(self)
-        return this_project
+        saved_project = Saved_project(self)
+        return pickle.dumps(saved_project)
 
-    def load_project(self, root, window_height, window_width):
+    def load_canvas(self, root, window_height, window_width):
         self.C = Canvas(root, bg="white",
                 height=window_height, width=window_width)
         
@@ -43,28 +43,34 @@ class Project:
 
         self.C.pack()
 
+
+    def draw_black_line(self, coordinates:tuple):
+        self.C.create_line(coordinates[0], coordinates[1], 
+                           coordinates[2], coordinates[3]) #Meant to correspond to (x0, y0), (x1, y1)
+        self.lines.append(coordinates)
+
     def draw_square(self, mouse_coordinates):
-        project_canvas = self.C
-        lining = project_canvas.create_line 
+        lining = self.draw_black_line 
         x0 = mouse_coordinates[0]
         y0 = mouse_coordinates[1]
         offset = self.size
-        coordinates = [x0, y0, x0, y0]
+
             
-        lining(x0, y0, x0+offset, y0) 
-        lining(x0, y0, x0, y0+offset) 
-        lining(x0+offset, y0+offset, x0, y0+offset) 
-        lining(x0+offset, y0+offset, x0+offset, y0) 
+        lining((x0, y0, x0+offset, y0)) 
+        lining((x0, y0, x0, y0+offset)) 
+        lining((x0+offset, y0+offset, x0, y0+offset)) 
+        lining((x0+offset, y0+offset, x0+offset, y0)) 
+        print(self.lines)
 
 
     def __init__(self, root, window_height, window_width) -> None:
+        self.lines = [] #Stores drawn lines
         #These lists store the start and end points of lines as tuples of two tuples
         self.vert_line_coordinates = []
         self.hori_line_coordinates = []
-        self.name = simpledialog.askstring("", "Name the project")
         #for vali in range(C.cget(height)/10):
         self.size = 20
-        self.load_project(root, window_height, window_width)
+        self.load_canvas(root, window_height, window_width)
 
             
 
@@ -75,3 +81,6 @@ class Project:
     
 
     
+class Saved_project:
+    def __init__(self, project:Project) -> None:
+        self.drawn_lines = project.lines
