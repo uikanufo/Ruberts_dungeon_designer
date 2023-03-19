@@ -4,6 +4,7 @@ import pickle
 import os
 from project import *
 from decimal import Decimal, ROUND_HALF_UP, ROUND_HALF_DOWN
+import json
 
 
 window_width = 300
@@ -46,14 +47,13 @@ class Window(Frame):
     def save_project(self):
         savable_project = self.current_project.save_project()
         save = filedialog.asksaveasfilename()
-        with open(save, "wb") as saveplace:
+        with open(save, "w") as saveplace:
             saveplace.write(savable_project)
         
     def load_project(self):
         project = filedialog.askopenfilename()
-        projectbytes = open(project, "rb")
-        project = pickle.load(projectbytes)
-        project.load_project(root, window_height, window_width, project)
+        self.new_project()
+        self.current_project.load_project(project)
 
 
 
