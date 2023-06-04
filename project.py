@@ -48,12 +48,12 @@ class MemoCanvas(Canvas):
                 del self.imagerefs
             except AttributeError:
                 pass
+
+
 class Project:
 
-    
-
     def draw_grey_line(self, x0, y0, x1, y1):
-        return self.C.create_line(x0, y0, x1, y1, fill="grey", tags = "line")
+        return self.C.create_line(x0, y0, x1, y1, fill="grey", tags = "bgline") #bgline tag to separate between fore and background
 
     def grid_function(self, size:int, window_width, window_height):
         """Draws a grey grid. Keep in mind the offset of +1 for the startpoint of lines"""
@@ -92,7 +92,8 @@ class Project:
 
     def draw_black_line(self, coordinates:tuple):
         self.C.create_line(coordinates[0], coordinates[1], 
-                           coordinates[2], coordinates[3]) #Meant to correspond to (x0, y0), (x1, y1)
+                           coordinates[2], coordinates[3], tags = (coordinates, "fgline")) #Meant to correspond to (x0, y0), (x1, y1)
+    
 
 
     def load_project(self, project):
@@ -109,7 +110,8 @@ class Project:
 
 
     def draw_square(self, mouse_coordinates):
-        lining = self.draw_black_line 
+        """Draws 4 separate lines that make a square"""
+        lining = self.draw_black_line #A shorter way to use the function in question
         x0 = mouse_coordinates[0]
         y0 = mouse_coordinates[1]
         offset = self.size
@@ -119,6 +121,20 @@ class Project:
         lining((x0, y0, x0, y0+offset)) 
         lining((x0+offset, y0+offset, x0, y0+offset)) 
         lining((x0+offset, y0+offset, x0+offset, y0)) 
+
+    def delete_square(self, mouse_coordinates):
+        lining = self.C.delete #A shorter way to use the function in question
+        x0 = mouse_coordinates[0]
+        y0 = mouse_coordinates[1]
+        offset = self.size
+
+            
+        lining((x0, y0, x0+offset, y0)) 
+        lining((x0, y0, x0, y0+offset)) 
+        lining((x0+offset, y0+offset, x0, y0+offset)) 
+        lining((x0+offset, y0+offset, x0+offset, y0)) 
+        
+        
 
 
     def __init__(self, root, window_height, window_width) -> None:

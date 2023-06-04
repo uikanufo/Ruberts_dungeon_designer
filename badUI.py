@@ -61,8 +61,8 @@ root = Tk()
 app = Window(root)
 
 
+def get_square_coordinates(event):
 
-def draw_rectangle(event):
     x = event.x
     y = event.y
     xstart = x-(x%20)
@@ -73,11 +73,18 @@ def draw_rectangle(event):
     x1 = app.current_project.vert_line_coordinates[int((xstart+20)/20)][0][0]+1
     y1 = app.current_project.hori_line_coordinates[int((ystart+20)/20)][0][1]+1
     correct_coords = (x0, y0, x1, y1,)
-    print(correct_coords)
-    app.current_project.draw_square(correct_coords)
+    return correct_coords
+
+def draw_rectangle(event):
+    app.current_project.draw_square(get_square_coordinates(event))
+
+def delete_rectangle(event):
+    app.current_project.delete_square(get_square_coordinates(event))
+    
 
 
 root.bind("<Button-1 >", draw_rectangle)
+root.bind("<Button-3 >", delete_rectangle)
         
 
 root.wm_title("Tkinter window")
